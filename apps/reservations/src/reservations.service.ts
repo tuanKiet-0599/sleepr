@@ -12,7 +12,7 @@ export class ReservationsService {
     @Inject(PAYMENTS_SERVICE) paymentsService: ClientProxy
     ) {}
   async create(createReservationDto: CreateReservationDto, userId) {
-    return this.reservationsRepository.create({
+    return await this.reservationsRepository.create({
       ...createReservationDto,
       timestamp: new Date(),
       userId 

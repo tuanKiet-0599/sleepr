@@ -10,7 +10,8 @@ export class UsersService {
 
     private async validateCreateUserDto(createUserDto: CreateUserDto){
         try {
-            await this.userRepository.findOne({email: createUserDto.email})
+            const testuser = await this.userRepository.findOne({email: createUserDto.email})
+            console.log(testuser)
         } catch (err) {
             return;
         }
