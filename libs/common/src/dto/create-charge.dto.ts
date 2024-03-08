@@ -7,7 +7,7 @@ export class CreateChargeDto {
     @IsNotEmptyObject()
     @ValidateNested()
     @Type(() => CardDto)
-    card: CardDto
+    card: CardDto;
 
     @IsNumber()
     amount: number;

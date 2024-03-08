@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import Stripe from 'stripe';
-import { CreateChargeDto } from '../../../libs/common/src/dto/create-charge.dto';
+import { CreateChargeDto } from '@app/common';
 
 @Injectable()
 export class PaymentsService {
@@ -10,23 +10,18 @@ export class PaymentsService {
   })
   constructor(private readonly configService: ConfigService) {}
 
-  async createCharge({card, amount}: CreateChargeDto) {
+  async createCharge({amount}: CreateChargeDto) {
    try {
-    const paymentMethod = await this.stripe.paymentMethods.create({
-      type: 'card',
-      card
-    })
 
     const paymentIntent = await this.stripe.paymentIntents.create({
-      payment_method: paymentMethod.id,
       amount: amount * 100,
       confirm: true,
-      payment_method_types: ['card'],
-      currency: 'aud'
-    })
+      payment_method: 'pm_card_visa',
+      currency: 'aud',
+      payment_method_types: ['card']
+    });
     return paymentIntent
    } catch (err) {
-    console.log(err)
     return err
    }
   }
