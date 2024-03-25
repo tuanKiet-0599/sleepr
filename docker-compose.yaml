@@ -22,6 +22,8 @@ services:
       # - '9229:9229'
     volumes:
       - .:/usr/src/app
+    expose:
+      - 3000
   auth:
     depends_on:
       - mysql
@@ -44,6 +46,8 @@ services:
       - '3001:3001'
     volumes:
       - .:/usr/src/app
+    expose:
+      - 3001  
   payments:
     depends_on:
       - mysql
