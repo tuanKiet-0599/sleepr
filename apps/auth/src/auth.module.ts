@@ -21,13 +21,11 @@ import { JwtStrategy } from './strategies/jwt.strategy';
     }),
     ConfigModule.forRoot({
       isGlobal: true,
-      envFilePath: './apps/auth/.env',
       validationSchema: Joi.object({
-        MONGODB_URI: Joi.string().required(),
         JWT_SECRET: Joi.string().required(),
         JWT_EXPIRATION: Joi.number().required(),
         HTTP_PORT: Joi.number().required(),
-        TCP_PORT: Joi.number().required()
+        RABBITMQ_URI: Joi.string().required()
       })
     })
   ],

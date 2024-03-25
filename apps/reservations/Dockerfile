@@ -7,12 +7,12 @@ COPY yarn.lock ./
 COPY tsconfig.json tsconfig.json
 COPY nest-cli.json nest-cli.json
 
-# COPY . .
+# RUN  npm install -g yarn
+RUN  yarn install
+
 COPY apps/reservations apps/reservations
 COPY libs libs
  
-RUN yarn install
- 
-RUN yarn build reservations
+RUN  yarn build reservations
  
 CMD ["node", "dist/apps/reservations/main"]

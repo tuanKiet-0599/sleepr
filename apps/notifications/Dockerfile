@@ -7,12 +7,11 @@ COPY yarn.lock ./
 COPY tsconfig.json tsconfig.json
 COPY nest-cli.json nest-cli.json
 
-# COPY . .
+RUN  yarn install
+
 COPY apps/notifications apps/notifications
 COPY libs libs
  
-RUN yarn install
- 
-RUN yarn build notifications
+RUN  yarn build notifications
  
 CMD ["node", "dist/apps/notifications/main"]

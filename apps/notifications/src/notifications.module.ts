@@ -9,7 +9,6 @@ import { LoggerModule } from '@app/common';
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
-      envFilePath: './apps/payments/.env',
       validationSchema: Joi.object({
        PORT: Joi.number().required(),
        SMTP_USER: Joi.string().required(),

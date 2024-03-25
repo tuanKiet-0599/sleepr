@@ -1,36 +1,63 @@
 services:
   reservations:
+    depends_on:
+      - mysql
     build:
       context: .
       dockerfile: ./apps/reservations/Dockerfile
       target: development
-    command: yarn start:dev reservations
-    env_file:
-      - ./apps/reservations/.env
+    command:  yarn start reservations
+    environment:
+      - MYSQL_PORT=3306
+      - MYSQL_HOST=mysql
+      - MYSQL_USERNAME=root
+      - MYSQL_DATABASE=sleepr
+      - MYSQL_PASSWORD=1234
+      - RABBITMQ_URI=amqp://rabbitmq:5672
+      - PORT=3000
+      - AUTH_HOST=auth
+      - PAYMENTS_HOST=payments
     ports:
       - '3000:3000'
+      # - '9229:9229'
     volumes:
       - .:/usr/src/app
   auth:
+    depends_on:
+      - mysql
     build:
       context: .
       dockerfile: ./apps/auth/Dockerfile
       target: development
-    command: yarn start:dev auth
-    env_file:
-      - './apps/auth/.env'
+    command:  yarn start auth
+    environment:
+      - HTTP_PORT=3001
+      - JWT_SECRET=thisisatest
+      - JWT_EXPIRATION=3600
+      - RABBITMQ_URI=amqp://rabbitmq:5672
+      - MYSQL_PORT=3306
+      - MYSQL_HOST=mysql
+      - MYSQL_USERNAME=root
+      - MYSQL_DATABASE=sleepr
+      - MYSQL_PASSWORD=1234
     ports:
       - '3001:3001'
     volumes:
       - .:/usr/src/app
   payments:
+    depends_on:
+      - mysql
     build:
       context: .
       dockerfile: ./apps/payments/Dockerfile
       target: development
-    command: yarn start:dev payments
-    env_file:
-      - './apps/payments/.env'
+    command:  yarn start payments
+    environment:
+      - PORT=3003
+      - STRIPE_SECRET_KEY=sk_test_51OosVmFWBuWJY8bvBTbnO6KUE8gJUttNPgmHVbGPfvrYNTFGvTjHYjWaV7sAfra5Y40cnBpg2csm9tFkLxYOELIk00poJWqbrI
+      - NOTIFICATIONS_HOST=notifications
+      - NOTIFICATIONS_PORT=3004
+      - RABBITMQ_URI=amqp://rabbitmq:5672
     volumes:
       - .:/usr/src/app
   notifications:
@@ -38,10 +65,24 @@ services:
       context: .
       dockerfile: ./apps/notifications/Dockerfile
       target: development
-    command: yarn start:dev notifications
-    env_file:
-      - './apps/notifications/.env'
+    command:  yarn start notifications
+    environment:
+      - PORT=3004
+      - GOOGLE_OAUTH_CLIENT_ID=14237371986-p6h7ft8v1457ctgieduqt8qeahshc087.apps.googleusercontent.com
+      - GOOGLE_OAUTH_CLIENT_SECRET=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
+      - GOOGLE_OAUTH_REFRESH_TOKEN=1//042d6POWBj9YFCgYIARAAGAQSNwF-L9IrYURhwffIk_R9QoxAsZgBJo8p5BmA5RaclFAW6R3XVjhFO5K8Y4LfDPim8O1yIEFaMrQ
+      - SMTP_USER=tuankiet.0599@gmail.com
+      - RABBITMQ_URI=amqp://rabbitmq:5672
     volumes:
       - .:/usr/src/app
-  mongo:
-    image: mongo
+  mysql:
+    image: mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=1234
+      - MYSQL_DATABASE=sleepr
+    ports:
+      - '3306:3306'
+  rabbitmq:
+    image: rabbitmq
+    ports:
+      - 5672:5672
